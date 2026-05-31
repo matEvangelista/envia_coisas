@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Disponibilidade da Banca · Defesa de TCC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Spline+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- ───────────────────────── 01 · APRESENTAÇÃO ───────────────────────── -->
+  <header class="hero" id="apresentacao">
+    <div class="hero__art" aria-hidden="true"></div>
+    <div class="hero__mark">RJ · 2026</div>
+    <div class="hero__inner">
+      <p class="kicker reveal" style="--d:0">Painel de disponibilidade · banca examinadora</p>
+      <h1 class="hero__title reveal" style="--d:1">
+        Quando<br /><em>todos</em> podemos<br />nos encontrar?
+      </h1>
+      <p class="hero__lede reveal" style="--d:2">
+        Esta é uma ferramenta para que cada integrante da banca marque os
+        intervalos de data e horário em que está disponível para a defesa do
+        Trabalho de Conclusão de Curso. Some as suas janelas às dos demais e o
+        painel revela, lá embaixo, os momentos em que <strong>todo mundo</strong>
+        coincide.
+      </p>
+      <div class="hero__thesis reveal" style="--d:3">
+        <span class="hero__thesis-label">Tema da defesa</span>
+        <span class="hero__thesis-title">Percepção de Violência na Cidade do Rio de Janeiro</span>
+      </div>
+      <p class="hero__window reveal" style="--d:4">
+        Período considerado · <b>15 de junho</b> a <b>31 de julho de 2026</b>
+      </p>
+    </div>
+    <div class="hero__scroll reveal" style="--d:5">↓ comece escolhendo o seu nome</div>
+  </header>
+
+  <main class="sheet">
+    <!-- ─────────────────────── 02 · QUEM É VOCÊ ─────────────────────── -->
+    <section class="block" id="identidade">
+      <div class="block__num">02</div>
+      <div class="block__body">
+        <h2 class="block__title">Meu nome é…</h2>
+        <p class="block__hint">
+          Selecione o seu nome na lista. Vamos confirmar antes de liberar a
+          marcação dos intervalos.
+        </p>
+        <div class="name-row">
+          <div class="select-wrap">
+            <select id="member-select" aria-label="Selecione o seu nome">
+              <option value="" disabled selected>— selecione —</option>
+            </select>
+          </div>
+          <button class="btn btn--primary" id="confirm-name-btn" disabled>
+            Sou eu
+          </button>
+        </div>
+        <p class="identity-badge" id="identity-badge" hidden>
+          Identificado como <b id="identity-name"></b>
+          <button class="link-btn" id="switch-name-btn">trocar</button>
+        </p>
+      </div>
+    </section>
+
+    <!-- ─────────────────────── 03 · MARCAR ─────────────────────── -->
+    <section class="block block--locked" id="marcar" aria-disabled="true">
+      <div class="block__num">03</div>
+      <div class="block__body">
+        <h2 class="block__title">Marque os seus intervalos</h2>
+        <p class="block__hint">
+          Como num site de passagens: escolha a <b>data de início</b> e a
+          <b>data de fim</b> no calendário, defina a <b>janela de horário</b> e
+          adicione. Para marcar um <b>único dia</b>, clique nele e adicione direto.
+          Pode incluir quantos intervalos (ou dias soltos) quiser.
+        </p>
+
+        <div class="picker">
+          <div class="picker__calendars" id="calendars"></div>
+
+          <div class="picker__controls">
+            <div class="range-readout">
+              <div class="range-readout__cell">
+                <span class="range-readout__label">Início</span>
+                <span class="range-readout__value" id="readout-start">—</span>
+              </div>
+              <div class="range-readout__arrow">→</div>
+              <div class="range-readout__cell">
+                <span class="range-readout__label">Fim</span>
+                <span class="range-readout__value" id="readout-end">—</span>
+              </div>
+            </div>
+
+            <div class="time-row">
+              <label class="time-field">
+                <span>Das</span>
+                <input type="time" id="time-start" value="14:00" step="900" />
+              </label>
+              <label class="time-field">
+                <span>às</span>
+                <input type="time" id="time-end" value="18:00" step="900" />
+              </label>
+            </div>
+
+            <p class="tz-note" id="tz-note" hidden></p>
+
+            <button class="btn btn--accent" id="add-interval-btn" disabled>
+              + adicionar intervalo
+            </button>
+            <p class="form-error" id="picker-error" hidden></p>
+          </div>
+        </div>
+
+        <div class="intervals">
+          <h3 class="intervals__title">
+            Meus intervalos
+            <span class="intervals__count" id="intervals-count">0</span>
+          </h3>
+          <ul class="intervals__list" id="intervals-list"></ul>
+          <p class="intervals__empty" id="intervals-empty">
+            Nenhum intervalo marcado ainda.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─────────────────────── 04 · INTERSEÇÃO ─────────────────────── -->
+    <section class="block block--intersection" id="intersecao">
+      <div class="block__num">04</div>
+      <div class="block__body">
+        <h2 class="block__title">Quando coincidimos</h2>
+        <p class="block__hint">
+          Atualiza automaticamente e vai se formando <b>cumulativamente</b>: mostra
+          a coincidência entre quem já respondeu, então você pode preencher o seu
+          horário com base nos demais. Horários no <b>fuso de Brasília</b>.
+        </p>
+
+        <div class="roster" id="roster"></div>
+
+        <div class="result" id="intersection-result">
+          <p class="result__placeholder">Carregando…</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <span>Painel local · dados guardados em <code>data/banca.db</code></span>
+    <span class="foot__rj">⟡ Rio de Janeiro</span>
+  </footer>
+
+  <!-- ───────────────────────── MODAIS ───────────────────────── -->
+  <div class="modal" id="modal-name" hidden>
+    <div class="modal__overlay" data-close></div>
+    <div class="modal__card" role="dialog" aria-modal="true" aria-labelledby="modal-name-title">
+      <p class="modal__eyebrow">Confirmação de identidade</p>
+      <h3 class="modal__title" id="modal-name-title">Este é mesmo o seu nome?</h3>
+      <p class="modal__name" id="modal-name-value">—</p>
+      <p class="modal__text">
+        As marcações ficarão registradas sob este nome. Confirme que é você de
+        verdade.
+      </p>
+      <div class="modal__actions">
+        <button class="btn btn--ghost" data-close>Não, voltar</button>
+        <button class="btn btn--primary" id="modal-name-confirm">Sim, sou eu</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="modal-save" hidden>
+    <div class="modal__overlay" data-close></div>
+    <div class="modal__card" role="dialog" aria-modal="true" aria-labelledby="modal-save-title">
+      <p class="modal__eyebrow">Confirmar marcação</p>
+      <h3 class="modal__title" id="modal-save-title">Os intervalos estão corretos?</h3>
+      <ul class="modal__summary" id="modal-save-summary"></ul>
+      <div class="modal__actions">
+        <button class="btn btn--ghost" data-close>Revisar</button>
+        <button class="btn btn--accent" id="modal-save-confirm">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="modal-delete" hidden>
+    <div class="modal__overlay" data-close></div>
+    <div class="modal__card" role="dialog" aria-modal="true" aria-labelledby="modal-delete-title">
+      <p class="modal__eyebrow">Excluir intervalo</p>
+      <h3 class="modal__title" id="modal-delete-title">Remover este intervalo?</h3>
+      <p class="modal__name" id="modal-delete-value">—</p>
+      <div class="modal__actions">
+        <button class="btn btn--ghost" data-close>Cancelar</button>
+        <button class="btn btn--danger" id="modal-delete-confirm">Excluir</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" hidden></div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
