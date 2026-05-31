@@ -1,0 +1,44 @@
+# Render Blueprint — Painel de disponibilidade da banca
+# Deploy: https://dashboard.render.com → New → Blueprint → aponte para este repo.
+#
+# IMPORTANTE sobre persistência:
+#   O app guarda tudo em SQLite (data/banca.db). Para os dados NÃO sumirem a
+#   cada deploy, é preciso um disco persistente — recurso de planos pagos
+#   (Starter+). No plano free não há disco e o banco é reiniciado a cada redeploy.
+
+services:
+  - type: web
+    name: painel-banca
+    runtime: python
+    plan: starter            # 'starter' (pago) é necessário para o disco abaixo
+    region: oregon           # troque se quiser (ex.: ohio, frankfurt, singapore)
+    branch: main
+    healthCheckPath: /api/members
+
+    # Instala o uv e resolve as dependências a partir do uv.lock.
+    buildCommand: "pip install uv && uv sync --frozen --no-dev"
+    # Usa o uvicorn do .venv criado pelo uv; Render injeta a porta em $PORT.
+    startCommand: ".venv/bin/uvicorn app:app --host 0.0.0.0 --port $PORT"
+
+    # Disco persistente montado exatamente onde o app grava o SQLite.
+    disk:
+      name: dados-banca
+      mountPath: /opt/render/project/src/data
+      sizeGB: 1
+
+    envVars:
+      # Destinatário do aviso "todos preencheram + há horário em comum".
+      - key: NOTIFY_TO
+        value: mateus.e.alcantara@edu.unirio.br
+      # SMTP de saída (exemplo Gmail). Os segredos NÃO ficam no repo:
+      # 'sync: false' faz o Render pedir o valor no painel, em cada ambiente.
+      - key: SMTP_HOST
+        value: smtp.gmail.com
+      - key: SMTP_PORT
+        value: "587"
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASSWORD
+        sync: false
+      - key: SMTP_FROM
+        sync: false
