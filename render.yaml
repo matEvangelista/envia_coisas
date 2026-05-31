@@ -12,7 +12,7 @@ services:
     runtime: python
     plan: starter            # 'starter' (pago) é necessário para o disco abaixo
     region: oregon           # troque se quiser (ex.: ohio, frankfurt, singapore)
-    branch: main
+    branch: master
     healthCheckPath: /api/members
 
     # Instala o uv e resolve as dependências a partir do uv.lock.
